@@ -1,0 +1,30 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: A-GELD-create-table-deposit_account
+      author: postgres
+      changes:
+        - createTable:
+            tableName: deposit_account
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: main_num
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: perc_num
+                  type: varchar(20)
+              - column:
+                  name: m_account_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p_account_id
+                  type: uuid

@@ -1,0 +1,15 @@
+version: '3'
+services:
+  deposit-service:
+    image: ${AND_DOCKER_REGISTRY_NAME}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:${CI_COMMIT_REF_SLUG}
+    ports:
+      - ${EXPOSE_HOST_PORT}:${EXPOSE_CONTAINER_PORT}
+    restart: always
+    logging:
+      options:
+        max-size: 10m
+    networks:
+      - a-geld
+networks:
+  a-geld:
+    external: true

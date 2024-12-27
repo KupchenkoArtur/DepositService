@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/V1/A-GELD-create-table-product.yaml
+  - include:
+      file: db/changelog/V1/A-GELD-create-table-deposit_account.yaml
+  - include:
+      file: db/changelog/V1/A-GELD-create-table-percent.yaml
+  - include:
+      file: db/changelog/V1/A-GELD-create-table-deposit.yaml
+  - include:
+      file: db/changelog/V1/A-GELD-create-table-transactions.yaml
+

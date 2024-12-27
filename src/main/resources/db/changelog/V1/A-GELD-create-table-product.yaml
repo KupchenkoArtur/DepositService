@@ -1,0 +1,94 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: A-GELD-create-table-product
+      author: postgres
+      changes:
+        - createTable:
+            tableName: product
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: currency
+                  type: varchar(3)
+                  defaultValue: "RUB"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: amount_min
+                  type: decimal(12,2)
+                  constraints:
+                    nullable: false
+                    checkConstraint: amount_min >= 0
+              - column:
+                  name: amount_max
+                  type: decimal(12,2)
+                  constraints:
+                    nullable: false
+                    checkConstraint: amount_max >= 0, amount_min < amount_max
+              - column:
+                  name: product_status
+                  type: boolean
+                  defaultValue: "true"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: autoren_status
+                  type: boolean
+                  defaultValue: "false"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: day_max
+                  type: int
+              - column:
+                  name: day_min
+                  type: int
+              - column:
+                  name: time_limited
+                  type: boolean
+                  defaultValue: "true"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: capitalization
+                  type: int
+                  defaultValue: "0"
+                  constraints:
+                    nullable: false
+                    checkConstraint: capitalization between 1 AND 5
+              - column:
+                  name: replenishment
+                  type: boolean
+                  defaultValue: "false"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: withdrawal
+                  type: smallint
+                  defaultValue: "0"
+                  constraints:
+                    nullable: false
+                    checkConstraint: withdrawal between 1 AND 3
+              - column:
+                  name: revocable
+                  type: boolean
+                  defaultValue: "false"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: penalty
+                  type: decimal(3,2)
+                  defaultValue: "0"
+                  constraints:
+                    nullable: false
+                    checkConstraint: penalty >= 0

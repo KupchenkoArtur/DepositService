@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deposit-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deposit-service
+  template:
+    metadata:
+      labels:
+        app: deposit-service
+    spec:
+      containers:
+        - name: deposit-service
+          image: ${AND_DOCKER_REGISTRY_NAME}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:${CI_COMMIT_REF_SLUG}
+          imagePullPolicy: Always
+          resources:
+            requests: 
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "150m"
+          ports:
+            - containerPort: 8088
+          volumeMounts:
+            - name: config-volume
+              mountPath: /app/config/application.yml
+              subPath: application.yml
+      volumes:
+        - name: config-volume
+          configMap:
+            name: deposit-service-config
+      imagePullSecrets:
+        - name: ${SECRET_K8S}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: deposit-service
+spec:
+  selector:
+    app: deposit-service
+  ports:
+    - protocol: TCP
+      port: 8088
+      targetPort: 8088
+      nodePort: ${NODE_PORT}
+  type: NodePort

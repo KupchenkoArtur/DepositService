@@ -1,0 +1,69 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: A-GELD-create-table-deposit
+      author: postgres
+      changes:
+        - createTable:
+            tableName: deposit
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: product_id
+                  type: uuid
+                  constraints:
+                    foreignKeyName: fk_product_id
+                    references: product(id)
+              - column:
+                  name: customer_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: account_id
+                  type: uuid
+                  constraints:
+                    foreignKeyName: fk_account_id
+                    references: deposit_account(id)
+              - column:
+                  name: initial_amount
+                  type: decimal(12,2)
+                  constraints:
+                    nullable: false
+                    checkConstraint: initial_amount > 0
+              - column:
+                  name: start_date
+                  type: timestamp(0) with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: end_date
+                  type: timestamp(0) with time zone
+                  constraints:
+                    nullable: false
+                    checkConstraint: end_date > start_date
+              - column:
+                  name: close_date
+                  type: timestamp(0) with time zone
+              - column:
+                  name: deposit_status
+                  type: boolean
+                  defaultValue: "true"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: autoren_status
+                  type: boolean
+                  defaultValue: "true"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cur_percent
+                  type: decimal(4,2)
+                  constraints:
+                    nullable: false
+                    checkConstraint: cur_percent > 0

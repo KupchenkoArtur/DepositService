@@ -1,0 +1,54 @@
+include:
+  - component: git.astondevs.ru/infrastructure/devops/gitlab-components/build-docker-image/build-docker-template@0.0.16
+  - component: git.astondevs.ru/infrastructure/devops/gitlab-components/deploy-project/deploy-via-compose-template@0.0.11
+    inputs:
+      rules: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop"
+  - project: "laboratory/a-geld/devops"
+    file: "/.build-artifact.yml"
+  - project: "laboratory/a-geld/devops"
+    file: "/.sonarqube-check.yml"
+  - project: "laboratory/a-geld/devops"
+    file: "/.deploy-to-k8s.yml"
+  - project: "laboratory/a-geld/devops"
+    file: "/.deploy-to-k8s-test.yml"
+
+create-container:
+  extends: .build-docker-template
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop" || $CI_COMMIT_BRANCH == "test"
+  
+deploy-k8s:
+  extends: .deploy-to-k8s
+
+deploy-k8s-test:
+  extends: .deploy-to-k8s-test
+
+build-artifact:
+  extends: .build-artifact
+
+sonarqube-check:
+  extends: .sonarqube-check
+  needs:
+    - job: build-artifact
+      artifacts: true 
+
+# deploy docker
+# deploy-dev:
+#   extends: .deploy-via-compose
+#   variables:
+#     EXPOSE_HOST_PORT: "8088"
+#     EXPOSE_CONTAINER_PORT: "8088"
+#   tags:
+#     - shell-dev
+#   rules:
+#     - if: $CI_COMMIT_BRANCH == "develop"
+
+# deploy-prod:
+#   extends: .deploy-via-compose
+#   variables:
+#     EXPOSE_HOST_PORT: "8088"
+#     EXPOSE_CONTAINER_PORT: "8088"
+#   tags:
+#     - shell-prod
+#   rules:
+#     - if: $CI_COMMIT_BRANCH == "main"

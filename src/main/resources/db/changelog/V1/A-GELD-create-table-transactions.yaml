@@ -1,0 +1,68 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: A-GELD-create-table-transactions
+      author: postgres
+      changes:
+        - createTable:
+            tableName: transactions
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: account_id
+                  type: uuid
+                  constraints:
+                    foreignKeyName: fk_account_id
+                    references: deposit_account(id)
+              - column:
+                  name: oper_date
+                  type: timestamp(0) with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: oper_type
+                  type: smallint
+                  constraints:
+                    nullable: false
+                    checkConstraint: oper_type in (10, 11, 20, 21)
+              - column:
+                  name: oper_sum
+                  type: decimal(12, 2)
+                  constraints:
+                    nullable: false
+                    checkConstraint: oper_sum > 0
+              - column:
+                  name: db_kt
+                  type: smallint
+                  constraints:
+                    nullable: false
+                    checkConstraint: db_kt in (1, 2)
+              - column:
+                  name: perc_balance
+                  type: decimal(12, 2)
+                  constraints:
+                    nullable: false
+                    checkConstraint: perc_balance >= 0
+              - column:
+                  name: cur_balance
+                  type: decimal(12, 2)
+                  constraints:
+                    nullable: false
+                    checkConstraint: cur_balance >= 0
+              - column:
+                  name: total_balance
+                  type: decimal(12, 2)
+                  constraints:
+                    nullable: false
+                    checkConstraint: total_balance = cur_balance + perc_balance
+              - column:
+                  name: deposit_id
+                  type: uuid
+                  constraints:
+                    foreignKeyName: fk_deposit_id
+                    references: deposit(id)
